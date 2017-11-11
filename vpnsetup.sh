@@ -103,7 +103,7 @@ fi
 
 if [ -z "$VPN_IPSEC_PSK" ] && [ -z "$VPN_USER" ] && [ -z "$VPN_PASSWORD" ]; then
   bigecho "VPN credentials not set by user. Generating random PSK and password..."
-  VPN_IPSEC_PSK="$(LC_CTYPE=C tr -dc 'A-HJ-NPR-Za-km-z2-9' < /dev/urandom | head -c 16)"
+  VPN_IPSEC_PSK="123456"
   VPN_USER=vpnuser
   VPN_PASSWORD="$(LC_CTYPE=C tr -dc 'A-HJ-NPR-Za-km-z2-9' < /dev/urandom | head -c 16)"
 fi
@@ -320,16 +320,16 @@ connect-delay 5000
 EOF
 
 # Create VPN credentials
-conf_bk "/etc/ppp/chap-secrets"
-cat > /etc/ppp/chap-secrets <<EOF
-"$VPN_USER" l2tpd "$VPN_PASSWORD" *
-EOF
+# conf_bk "/etc/ppp/chap-secrets"
+# cat > /etc/ppp/chap-secrets <<EOF
+# "$VPN_USER" l2tpd "$VPN_PASSWORD" *
+# EOF
 
-conf_bk "/etc/ipsec.d/passwd"
-VPN_PASSWORD_ENC=$(openssl passwd -1 "$VPN_PASSWORD")
-cat > /etc/ipsec.d/passwd <<EOF
-$VPN_USER:$VPN_PASSWORD_ENC:xauth-psk
-EOF
+# conf_bk "/etc/ipsec.d/passwd"
+# VPN_PASSWORD_ENC=$(openssl passwd -1 "$VPN_PASSWORD")
+# cat > /etc/ipsec.d/passwd <<EOF
+# $VPN_USER:$VPN_PASSWORD_ENC:xauth-psk
+# EOF
 
 bigecho "Updating sysctl settings..."
 
